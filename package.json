@@ -1,0 +1,23 @@
+{
+    "name": "@sylo-digital/scripts",
+    "version": "1.0.0",
+    "files": [
+        "eslint",
+        "jest",
+        "tsconfig"
+    ],
+    "dependencies": {
+        "@swc/core": "^1.2.174",
+        "@swc/jest": "^0.2.20",
+        "eslint": "^8.14.0",
+        "eslint-config-galex": "^3.6.5",
+        "eslint-plugin-es": "^4.1.0"
+    },
+    "devDependencies": {
+        "jest": "^28.0.3",
+        "typescript": "^4.6.4"
+    },
+    "peerDependencies": {
+        "jest": "^27.5.1"
+    }
+}
