@@ -2,10 +2,17 @@ const { createConfig, getDependencies } = require("eslint-config-galex/src/creat
 const { createTSOverride } = require("eslint-config-galex/src/overrides/typescript");
 const { createJestOverride } = require("eslint-config-galex/src/overrides/jest");
 const packageJson = require(process.cwd() + "/package.json");
+const { writeFileSync } = require("fs");
 
+writeFileSync("out", process.cwd());
 if (!packageJson.devDependencies.typescript) {
   throw new Error('"typescript" must be in the "devDependencies" section of package.json');
 }
+
+const mergedDeps = {
+  ...packageJson.dependencies,
+  ...packageJson.devDependencies,
+};
 
 module.exports = createConfig({
   rules: {
@@ -40,9 +47,15 @@ module.exports = createConfig({
   },
   overrides: [
     createTSOverride({
+      hasNest: !!mergedDeps["@nestjs/core"],
       typescript: {
-        hasTypeScript: true,
-        version: packageJson.devDependencies.typescript,
+        hasTypeScript: !!mergedDeps.typescript,
+        version: mergedDeps.typescript,
+      },
+      react: {
+        hasReact: !!mergedDeps.react,
+        isNext: !!mergedDeps.next,
+        isPreact: !!mergedDeps.preact,
       },
       rules: {
         "@typescript-eslint/consistent-type-imports": ["error", { prefer: "type-imports" }],
@@ -78,6 +91,9 @@ module.exports = createConfig({
     }),
     createJestOverride({
       ...getDependencies(),
+      hasJestDom: !!mergedDeps["@testing-library/jest-dom`"],
+      hasJest: !!mergedDeps.jest,
+      hasTestingLibrary: !!mergedDeps["@testing-library/react"],
       rules: {
         "jest/prefer-strict-equal": "off",
         "jest-formatting/padding-around-all": "off",
